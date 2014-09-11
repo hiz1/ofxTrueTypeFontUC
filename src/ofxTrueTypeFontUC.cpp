@@ -1046,11 +1046,16 @@ float ofxTrueTypeFontUC::stringHeight(const string &c){
 }
 
 //=====================================================================
-void ofxTrueTypeFontUC::drawString(const string &utf8_src, float x, float y){
+void ofxTrueTypeFontUC::drawString(const string &utf8_src, float x, float y, Alignment alignment){
   if (!mImpl->bLoadedOk) {
     ofLog(OF_LOG_ERROR,"ofxTrueTypeFontUC::drawString - Error : font not allocated -- line %d in %s", __LINE__,__FILE__);
     return;
   };
+  
+  // Adjust alignment
+  ofVec2f offset = getOffset(utf8_src, alignment);
+  x += offset.x;
+  y += offset.y;
   
   GLint index = 0;
   GLfloat X = x;
@@ -1133,7 +1138,7 @@ void ofxTrueTypeFontUC::Impl::unbind(const unsigned int &charID){
 }
 
 //=====================================================================
-void ofxTrueTypeFontUC::drawStringAsShapes(const string &utf8_src, float x, float y){
+void ofxTrueTypeFontUC::drawStringAsShapes(const string &utf8_src, float x, float y, Alignment alignment){
   
   if (!mImpl->bLoadedOk) {
     ofLogError("ofxTrueTypeFontUC") << "drawStringAsShapes(): font not allocated: line " << __LINE__ << " in " << __FILE__;
@@ -1145,6 +1150,11 @@ void ofxTrueTypeFontUC::drawStringAsShapes(const string &utf8_src, float x, floa
     ofLogError("ofxTrueTypeFontUC") << "drawStringAsShapes(): contours not created for this font, call loadFont() with makeContours set to true";
     return;
   }
+  
+  // Adjust alignment
+  ofVec2f offset = getOffset(utf8_src, alignment);
+  x += offset.x;
+  y += offset.y;
   
   GLint index = 0;
   GLfloat X = x;
