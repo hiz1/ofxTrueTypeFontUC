@@ -12,7 +12,8 @@ const static string OF_TTFUC_MONO = "monospace";
 enum Alignment {
     TOP_LEFT   , TOP_CENTER   , TOP_RIGHT,
     MIDDLE_LEFT, MIDDLE_CENTER, MIDDLE_RIGHT,
-    BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT
+    BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT,
+    NONE
 };
 
 //--------------------------------------------------
@@ -51,6 +52,7 @@ public:
 
   // code for alignment
   ofVec2f getOffset(const string &s, Alignment alignment) {
+    if(alignment == NONE)return ofVec2f();
     ofRectangle r = getStringBoundingBox(s, 0, 0);
     switch (alignment) {
       case TOP_LEFT:
