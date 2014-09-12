@@ -26,8 +26,8 @@ public:
   bool loadFont(const string &filename, int fontsize, bool bAntiAliased=true, bool makeContours=false, float simplifyAmt=0.3, int dpi=0);
   void reloadFont();
   
-  void drawString(const string &utf8_string, float x, float y, Alignment alignment = BOTTOM_LEFT);
-  void drawStringAsShapes(const string &utf8_string, float x, float y, Alignment alignment = BOTTOM_LEFT);
+  void drawString(const string &utf8_string, float x, float y, Alignment alignment = NONE);
+  void drawStringAsShapes(const string &utf8_string, float x, float y, Alignment alignment = NONE);
   
   vector<ofPath> getStringAsPoints(const string &utf8_string, bool vflip=ofIsVFlipped());
   ofRectangle getStringBoundingBox(const string &utf8_string, float x, float y);
