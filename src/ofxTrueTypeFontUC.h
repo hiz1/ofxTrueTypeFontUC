@@ -9,7 +9,7 @@ const static string OF_TTFUC_SANS = "sans-serif";
 const static string OF_TTFUC_SERIF = "serif";
 const static string OF_TTFUC_MONO = "monospace";
 
-enum Alignment {
+enum Pivot {
     TOP_LEFT   , TOP_CENTER   , TOP_RIGHT,
     MIDDLE_LEFT, MIDDLE_CENTER, MIDDLE_RIGHT,
     BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT,
@@ -26,11 +26,11 @@ public:
   bool loadFont(const string &filename, int fontsize, bool bAntiAliased=true, bool makeContours=false, float simplifyAmt=0.3, int dpi=0);
   void reloadFont();
   
-  void drawString(const string &utf8_string, float x, float y, Alignment alignment = NONE);
-  void drawStringAsShapes(const string &utf8_string, float x, float y, Alignment alignment = NONE);
+  void drawString(const string &utf8_string, float x, float y, Pivot pivot = NONE);
+  void drawStringAsShapes(const string &utf8_string, float x, float y, Pivot pivot = NONE);
   
   vector<ofPath> getStringAsPoints(const string &utf8_string, bool vflip=ofIsVFlipped());
-  ofRectangle getStringBoundingBox(const string &utf8_string, float x, float y);
+  ofRectangle getStringBoundingBox(const string &utf8_string, float x, float y, Pivot pivot = NONE);
   
   bool isLoaded();
   bool isAntiAliased();
@@ -49,45 +49,9 @@ public:
   ofTextEncoding getEncoding() const;
   // set the default dpi for all typefaces
   static void setGlobalDpi(int newDpi);
-
   // code for alignment
-  ofVec2f getOffset(const string &s, Alignment alignment) {
-    if(alignment == NONE)return ofVec2f();
-    ofRectangle r = getStringBoundingBox(s, 0, 0);
-    switch (alignment) {
-      case TOP_LEFT:
-        return ofVec2f(0, floor(-r.y ) );
-      case TOP_CENTER:
-        return ofVec2f( floor(-r.x - r.width * 0.5f), floor(-r.y ) );
-      case TOP_RIGHT:
-        return ofVec2f( 2.0 * floor(-r.x - r.width * 0.5f), floor(-r.y ) );
-      case MIDDLE_LEFT:
-        return ofVec2f( 0, floor(-r.y - r.height * 0.5f) );
-      case MIDDLE_CENTER:
-        return ofVec2f( floor(-r.x - r.width * 0.5f), floor(-r.y - r.height * 0.5f) );
-      case MIDDLE_RIGHT:
-        return ofVec2f( 2.0 * floor(-r.x - r.width * 0.5f), floor(-r.y - r.height * 0.5f) );
-      case BOTTOM_LEFT:
-        return ofVec2f( 0, floor(-r.y - r.height) );
-      case BOTTOM_CENTER:
-        return ofVec2f( floor(-r.x - r.width * 0.5f), floor(-r.y - r.height) );
-      case BOTTOM_RIGHT:
-        return ofVec2f( 2.0 * floor(-r.x - r.width * 0.5f), floor(-r.y - r.height) );
-      default:
-        break;
-    }
-  }
-  
-  void drawCenteredBoundingBox(const string &s, float x, float y, float padding = 0){
-    ofRectangle r = getStringBoundingBox(s, 0, 0);
-    r.x -= padding;
-    r.y -= padding;
-    r.width += 2.0f * padding;
-    r.height += 2.0f * padding;
-    ofSetRectMode(OF_RECTMODE_CENTER);
-    ofRect( x, y, r.width, r.height);
-    ofSetRectMode(OF_RECTMODE_CORNER);
-  }
+  ofVec2f getOffset(const string &s, Pivot pivot);
+  ofVec2f getOffset(const ofRectangle &r, Pivot pivot);
   
 private:
   class Impl;

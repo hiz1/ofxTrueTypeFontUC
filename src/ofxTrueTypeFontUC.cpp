@@ -959,7 +959,7 @@ float ofxTrueTypeFontUC::stringWidth(const string &c) {
 }
 
 
-ofRectangle ofxTrueTypeFontUC::getStringBoundingBox(const string &utf8_src, float x, float y){
+ofRectangle ofxTrueTypeFontUC::getStringBoundingBox(const string &utf8_src, float x, float y, Pivot pivot){
   
   ofRectangle myRect;
   
@@ -984,6 +984,7 @@ ofRectangle ofxTrueTypeFontUC::getStringBoundingBox(const string &utf8_src, floa
     myRect.y = 0;
     myRect.width = 0;
     myRect.height = 0;
+    myRect   = myRect + getOffset(myRect, pivot);
     return myRect;
   }
   
@@ -1036,6 +1037,8 @@ ofRectangle ofxTrueTypeFontUC::getStringBoundingBox(const string &utf8_src, floa
   myRect.y        = miny;
   myRect.width    = maxx-minx;
   myRect.height   = maxy-miny;
+  myRect          = myRect + getOffset(myRect, pivot);
+  
   return myRect;
 }
 
@@ -1046,14 +1049,14 @@ float ofxTrueTypeFontUC::stringHeight(const string &c){
 }
 
 //=====================================================================
-void ofxTrueTypeFontUC::drawString(const string &utf8_src, float x, float y, Alignment alignment){
+void ofxTrueTypeFontUC::drawString(const string &utf8_src, float x, float y, Pivot pivot){
   if (!mImpl->bLoadedOk) {
     ofLog(OF_LOG_ERROR,"ofxTrueTypeFontUC::drawString - Error : font not allocated -- line %d in %s", __LINE__,__FILE__);
     return;
   };
   
   // Adjust alignment
-  ofVec2f offset = getOffset(utf8_src, alignment);
+  ofVec2f offset = getOffset(utf8_src, pivot);
   x += offset.x;
   y += offset.y;
   
@@ -1138,7 +1141,7 @@ void ofxTrueTypeFontUC::Impl::unbind(const unsigned int &charID){
 }
 
 //=====================================================================
-void ofxTrueTypeFontUC::drawStringAsShapes(const string &utf8_src, float x, float y, Alignment alignment){
+void ofxTrueTypeFontUC::drawStringAsShapes(const string &utf8_src, float x, float y, Pivot pivot){
   
   if (!mImpl->bLoadedOk) {
     ofLogError("ofxTrueTypeFontUC") << "drawStringAsShapes(): font not allocated: line " << __LINE__ << " in " << __FILE__;
@@ -1152,7 +1155,7 @@ void ofxTrueTypeFontUC::drawStringAsShapes(const string &utf8_src, float x, floa
   }
   
   // Adjust alignment
-  ofVec2f offset = getOffset(utf8_src, alignment);
+  ofVec2f offset = getOffset(utf8_src, pivot);
   x += offset.x;
   y += offset.y;
   
@@ -1197,6 +1200,38 @@ void ofxTrueTypeFontUC::drawStringAsShapes(const string &utf8_src, float x, floa
 //-----------------------------------------------------------
 int ofxTrueTypeFontUC::getNumCharacters() {
   return mImpl->loadedChars.size();
+}
+
+//-----------------------------------------------------------
+ofVec2f ofxTrueTypeFontUC::getOffset(const string &s, Pivot pivot) {
+  ofRectangle r = getStringBoundingBox(s, 0, 0);
+  return getOffset(r, pivot);
+}
+
+ofVec2f ofxTrueTypeFontUC::getOffset(const ofRectangle &r, Pivot pivot) {
+  if(pivot == NONE)return ofVec2f();
+  switch (pivot) {
+    case TOP_LEFT:
+      return ofVec2f(0, floor(-r.y ) );
+    case TOP_CENTER:
+      return ofVec2f( floor(-r.x - r.width * 0.5f), floor(-r.y ) );
+    case TOP_RIGHT:
+      return ofVec2f( 2.0 * floor(-r.x - r.width * 0.5f), floor(-r.y ) );
+    case MIDDLE_LEFT:
+      return ofVec2f( 0, floor(-r.y - r.height * 0.5f) );
+    case MIDDLE_CENTER:
+      return ofVec2f( floor(-r.x - r.width * 0.5f), floor(-r.y - r.height * 0.5f) );
+    case MIDDLE_RIGHT:
+      return ofVec2f( 2.0 * floor(-r.x - r.width * 0.5f), floor(-r.y - r.height * 0.5f) );
+    case BOTTOM_LEFT:
+      return ofVec2f( 0, floor(-r.y - r.height) );
+    case BOTTOM_CENTER:
+      return ofVec2f( floor(-r.x - r.width * 0.5f), floor(-r.y - r.height) );
+    case BOTTOM_RIGHT:
+      return ofVec2f( 2.0 * floor(-r.x - r.width * 0.5f), floor(-r.y - r.height) );
+    default:
+      break;
+  }
 }
 
 //===========================================================
