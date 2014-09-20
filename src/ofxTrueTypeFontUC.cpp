@@ -1234,6 +1234,33 @@ ofVec2f ofxTrueTypeFontUC::getOffset(const ofRectangle &r, Pivot pivot) {
   }
 }
 
+//void ofxTrueTypeFontUC::setSize(int size) {
+//  mImpl->fontSize = size;
+//  refreshFont();
+//}
+//
+//void ofxTrueTypeFontUC::refreshFont() {
+//  FT_Set_Char_Size( mImpl->face, mImpl->fontSize << 6, mImpl->fontSize << 6, mImpl->dpi, mImpl->dpi);
+//  mImpl->lineHeight = mImpl->fontSize * 1.43f;
+//  
+//  //------------------------------------------------------
+//  //kerning would be great to support:
+//  //ofLogNotice("ofxTrueTypeFontUC") << "FT_HAS_KERNING ? " <<  FT_HAS_KERNING(face);
+//  //------------------------------------------------------
+//  
+//  if (mImpl->bMakeContours) {
+//    mImpl->charOutlines.clear();
+//  }
+//  
+//  // ------------- get default space size
+//  unsigned int charID = mImpl->getCharID('p');
+//  mImpl->loadChar(charID);
+//  
+//  // ------------- close the library and typeface
+//  mImpl->bLoadedOk = true;
+//
+//}
+
 //===========================================================
 namespace util {
   namespace ofxTrueTypeFontUC {

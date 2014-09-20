@@ -26,8 +26,8 @@ public:
   bool loadFont(const string &filename, int fontsize, bool bAntiAliased=true, bool makeContours=false, float simplifyAmt=0.3, int dpi=0);
   void reloadFont();
   
-  void drawString(const string &utf8_string, float x, float y, Pivot pivot = NONE);
-  void drawStringAsShapes(const string &utf8_string, float x, float y, Pivot pivot = NONE);
+  void drawString(const string &utf8_string, float x, float y, Pivot pivot = TOP_LEFT);
+  void drawStringAsShapes(const string &utf8_string, float x, float y, Pivot pivot = TOP_LEFT);
   
   vector<ofPath> getStringAsPoints(const string &utf8_string, bool vflip=ofIsVFlipped());
   ofRectangle getStringBoundingBox(const string &utf8_string, float x, float y, Pivot pivot = NONE);
@@ -52,7 +52,9 @@ public:
   // code for alignment
   ofVec2f getOffset(const string &s, Pivot pivot);
   ofVec2f getOffset(const ofRectangle &r, Pivot pivot);
-  
+//  // set size dynamically
+//  void setSize(int size);
+//  void refreshFont();
 private:
   class Impl;
   Impl *mImpl;
